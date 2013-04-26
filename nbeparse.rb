@@ -4,7 +4,7 @@
 @Date	:	April 25, 2013
 @Name	:	nbeparse.rb
 @Desc	:	This takes a NBE file organizes it and prints the organized data to standard out.
-@Usage	:	ruby nbeparse.rb args <nbe output>
+@Usage	:	ruby nbeparse.rb <args> <nbe output>
 
 """
 
@@ -18,7 +18,7 @@ http://cyanline.com
 """
 
 def usage()
-    $stderr.puts "Uasge: ruby nbeparse args <nbe output>"
+    $stderr.puts "Uasge: ruby nbeparse <args> <nbe output>"
     $stderr.puts
     $stderr.puts "Arguments:"
     $stderr.puts "-l  Display log message results"

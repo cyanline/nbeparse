@@ -6,7 +6,7 @@ standard out.
 
 Usage:
 
-    ruby nbeparse.rb args <nbe output>
+    ruby nbeparse.rb <args> <nbe output>
 
     Arguments:
     -l  Display log message results
