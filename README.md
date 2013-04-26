@@ -1,5 +1,8 @@
 nbeparse
 ========
 
+This takes an NBE file organizes it and prints to the organized data to
+standard out.
 
-    ruby nbeparse.rb <nbe file>
+Usage:
+    ruby nbeparse.rb <nbe output>

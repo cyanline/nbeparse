@@ -3,7 +3,7 @@
 @Author	:	CyanLine LLC
 @Date	:	April 25, 2013
 @Name	:	nbeparse.rb
-@Desc	:	This takes a NBE file organizes it and prints it to standard out
+@Desc	:	This takes a NBE file organizes it and prints the organized data to standard out.
 @Usage	:	ruby nbeparse.rb <nbe output>
 
 """
@@ -26,6 +26,7 @@ end
 $findings = Hash.new {|h, k| h[k] = Array.new}
 $descriptions = Hash.new {|h, k| h[k] = Array.new}
 
+
 filename = ARGV[0]
 puts "[-] opening #{filename}"
 puts
@@ -34,7 +35,7 @@ f = File.open(filename, "r") # user input
 f.each_with_index do |line, index|
 	# don't do any of this if the line is nil
 	if line != nil then
-        	vuln = line.split('|')
+        vuln = line.split('|')
 		# Time Stamps had a array length of 4 and we dont really 
 		# care to see timestamps
 		# We want only results
@@ -50,9 +51,13 @@ f.each_with_index do |line, index|
 			# if the description for this result number
 			# alread exists don't store it again
 			if !$descriptions.has_key?(vuln[4])
-				vuln[6].gsub!("\\n", " ")
-				desc = [vuln[5], vuln[3], vuln[6]]
-				$descriptions[vuln[4]].push(desc)
+			#	vuln[6].gsub!("\\n", " ")
+                descriptions = vuln[6].split("\\n")
+                descriptions.each do | line |
+                    line.gsub!("\\r", " ")
+                end
+				info = [vuln[5], vuln[3], descriptions]
+				$descriptions[vuln[4]].push(info)
 			end
 		end
 	end
@@ -60,7 +65,6 @@ end
 
 # Print everything in a readable manner
 $findings.each do |key, value|
-    puts
     print "==> "
 	puts key
 	puts $descriptions[key]
@@ -68,6 +72,6 @@ $findings.each do |key, value|
 	value.each do |e|
 		puts e
 	end
-	puts 
+    2.times do puts end
 end
 
