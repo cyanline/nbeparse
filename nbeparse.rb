@@ -8,9 +8,15 @@
 
 """
 
+TYPE = 5
+PORT = 3
+DESCRIPTION = 6
+NUMBER = 4
+IP = 2
 
 # Provide usage instructions
-def usage
+# methods
+def usage()
     $stderr.puts "Uasge: ruby nbeparse <args> <nbe output>"
     $stderr.puts
     $stderr.puts "Arguments:"
@@ -23,6 +29,7 @@ def usage
     exit(2)
 end
 
+<<<<<<< HEAD
 # Check if the user wants this result type logged for the final report
 def logResult?(type)
     
@@ -43,6 +50,20 @@ def logResult?(type)
 end
 
 # Parse the IP address that the user has provided for filtering
+def isType?(type)
+    if (type == "Log Message")
+        return true
+    elsif (type == "Security Hole")
+        return true
+    elsif (type == "Security Note")
+        return true
+    elsif (type == "Security Warning")
+        return true
+    end
+
+    return false
+end
+
 def onlyIP()
 
     ip = ARGV[0]
@@ -94,11 +115,11 @@ def collect()
 		    # second line was blank so we got rid of them
 		    if vuln.size > 4  && vuln[0] == 'results' && vuln[1] != ''  then
 
-                type = vuln[5]
-                port = vuln[3]
-                descriptions = vuln[6].split("\\n")
-                number = vuln[4]
-                ip = vuln[2]
+                type = vuln[TYPE]
+                port = vuln[PORT]
+                descriptions = vuln[DESCRIPTION].split("\\n")
+                number = vuln[NUMBER]
+                ip = vuln[IP]
             
                 # Check if the user wants this result logged
                 if logResult?(type) 
@@ -174,6 +195,7 @@ NBEParse
 http://cyanline.com
 
 """
+   
 
 $logs = false
 $notes = false
