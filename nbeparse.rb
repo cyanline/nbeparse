@@ -29,19 +29,10 @@ def usage()
     exit(2)
 end
 
-<<<<<<< HEAD
 # Check if the user wants this result type logged for the final report
-def logResult?(type)
+def log_result?(type)
     
-    if $all == true
-        return true
-    elsif type == "Log Message" && $logs == true
-        return true
-    elsif type == "Security Hole" && $holes == true
-        return true
-    elsif type == "Security Note" && $notes == true
-        return true
-    elsif type == "Security Warning" && $warnings == true
+    if ($all == true) || (type == "Log Message" && $logs == true) || (type == "Security Hole" && $holes == true) || (type == "Security Note" && $notes == true) || (type == "Security Warning" && $warnings == true) 
         return true
     end
 
@@ -49,29 +40,15 @@ def logResult?(type)
 
 end
 
-# Parse the IP address that the user has provided for filtering
-def isType?(type)
-    if (type == "Log Message")
-        return true
-    elsif (type == "Security Hole")
-        return true
-    elsif (type == "Security Note")
-        return true
-    elsif (type == "Security Warning")
-        return true
-    end
 
-    return false
-end
-
-def onlyIP()
+def only_ip()
 
     ip = ARGV[0]
 
     ipv4 = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/
    ipv6 = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/ 
 
-    if ip =~ ipv4 || ip =~ ipv6 then
+    if ip =~ ipv4 || ip =~ ipv6
         $onlyip = ip
         ARGV.shift
     else
@@ -81,7 +58,7 @@ def onlyIP()
 end
 
 # Log the number of times each result type occurs
-def logType(type)
+def log_type(type)
     if type == "Security Hole"
         $holeCount = $holeCount + 1
     elsif type == "Log Message"
@@ -122,7 +99,7 @@ def collect()
                 ip = vuln[IP]
             
                 # Check if the user wants this result logged
-                if logResult?(type) 
+                if log_result?(type) 
 
 			        # Add the ip address to the findings hash and use
 			        # the result number as the key
@@ -146,7 +123,7 @@ def collect()
 
                         # Log what type of vulnerability this is for display
                         # later
-                        logType(type)
+                        log_type(type)
     
 	    			    info = [type, port, descriptions]
 		    		    $descriptions[number].push(info)
@@ -158,7 +135,7 @@ def collect()
 end
 
 # Print the final report
-def printFindings()
+def print_findings()
 
     puts "Total Findings: #{$findings.size}"
     puts "======================"
@@ -213,7 +190,7 @@ loop { case ARGV[0]
     when '-h' then ARGV.shift; $holes = true
     when '-w' then ARGV.shift; $warnings = true
     when '-ni' then ARGV.shift; $noip = true
-    when '-i' then ARGV.shift; onlyIP()
+    when '-i' then ARGV.shift; only_ip()
     when /^-/ then usage()
     else break
 end; }
@@ -223,7 +200,7 @@ if $logs == false && $notes == false && $holes == false && $warnings == false &&
 end
 
 if ARGV.size != 1 then
-    usage
+    usage()
 end
                                                                
 # global finding db
@@ -240,4 +217,4 @@ $miscCount = 0
 collect()
 
 # Print out results
-printFindings()
+print_findings()
