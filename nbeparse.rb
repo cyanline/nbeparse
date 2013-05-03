@@ -40,7 +40,10 @@ def log_result?(type)
 
 end
 
-
+# If the user indicated they only want to see results from one IP address this
+# will parse the input to ensure that it is a properly formated IP and set the
+# $onlyip variable for use later.  If it's not valid we will print usage and
+# exit
 def only_ip()
 
     ip = ARGV[0]
@@ -137,6 +140,7 @@ end
 # Print the final report
 def print_findings()
 
+    # Print totals
     puts "Total Findings: #{$findings.size}"
     puts "======================"
     puts "Log Messages: #{$logCount}"
@@ -146,16 +150,21 @@ def print_findings()
     puts "Other Findings: #{$miscCount}"
     puts
 
+    # Print each finding
     $findings.each do |key, value|
         print "==> "
 	    puts key
 	    puts $descriptions[key]
+
+        # If we are printing results with IP addresses
         if $noip == false then
+            # Print out all IP addresses for each result
             puts "Host(s) :"
 	        value.each do |e|
                 puts e
 	        end
         end
+        # Seperator
         2.times do puts end
         puts "============================================================="
         2.times do puts end
@@ -163,6 +172,8 @@ def print_findings()
 
 end
 
+
+# Run
 
 puts """
 
@@ -172,7 +183,8 @@ NBEParse
 http://cyanline.com
 
 """
-   
+
+# Set default values for globals
 
 $logs = false
 $notes = false
@@ -183,6 +195,8 @@ $all = false
 $noip = false
 $onlyip = ""
 
+
+# Parse arguments
 loop { case ARGV[0]
     when '-a' then ARGV.shift; $all = true
     when '-l' then ARGV.shift; $logs = true
@@ -199,12 +213,15 @@ if $logs == false && $notes == false && $holes == false && $warnings == false &&
     $all = true
 end
 
+# User didnt supply enough information
 if ARGV.size != 1 then
     usage()
 end
                                                                
 # global finding db
 $findings = Hash.new {|h, k| h[k] = Array.new}
+
+# global descriptions db
 $descriptions = Hash.new {|h, k| h[k] = Array.new}
 
 $holeCount = 0
