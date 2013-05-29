@@ -106,15 +106,16 @@ def collect()
 
 			        # Add the ip address to the findings hash and use
 			        # the result number as the key
-                
-                    if $onlyip.length > 1
-                        if $onlyip == ip then
-			                $findings[number].push(ip)
+                    if !$findings[number][port].include?(ip) 
+                        if $onlyip.length > 1
+                            if $onlyip == ip then
+			                    $findings[number][port].push(ip)
+                            end
+                        else
+			                $findings[number][port].push(ip)
                         end
-                    else
-			            $findings[number].push(ip)
                     end
-    
+                    
 	    		    # Store descriptions once in a seperate hash
 		    	    # if the description for this result number
 			        # alread exists don't store it again
@@ -128,7 +129,7 @@ def collect()
                         # later
                         log_type(type)
     
-	    			    info = [type, port, descriptions]
+	    			    info = [type, descriptions]
 		    		    $descriptions[number].push(info)
 			        end
                 end
@@ -160,8 +161,14 @@ def print_findings()
         if $noip == false then
             # Print out all IP addresses for each result
             puts "Host(s) :"
-	        value.each do |e|
-                puts e
+	        value.each do |port, ips|
+                puts
+                puts port
+                puts "-------"
+                ips.each do |ip|
+                    puts ip
+                end
+                puts
 	        end
         end
         # Seperator
@@ -219,7 +226,7 @@ if ARGV.size != 1 then
 end
                                                                
 # global finding db
-$findings = Hash.new {|h, k| h[k] = Array.new}
+$findings = Hash.new {|h, k| h[k] = Hash.new { |p, i| p[i] = Array.new } }
 
 # global descriptions db
 $descriptions = Hash.new {|h, k| h[k] = Array.new}
