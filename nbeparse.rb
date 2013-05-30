@@ -117,21 +117,16 @@ def collect()
                     end
                     
 	    		    # Store descriptions once in a seperate hash
-		    	    # if the description for this result number
-			        # alread exists don't store it again
-			        if !$descriptions.has_key?(number)
+                    descriptions.each do | line |
+                        line.gsub!("\\r", " ")
+                    end
 
-                        descriptions.each do | line |
-                            line.gsub!("\\r", " ")
-                        end
-
-                        # Log what type of vulnerability this is for display
-                        # later
-                        log_type(type)
+                    # Log what type of vulnerability this is for display
+                    # later
+                    log_type(type)
     
-	    			    info = [type, descriptions]
-		    		    $descriptions[number].push(info)
-			        end
+	    			info = [type, descriptions]
+		    		$descriptions[number][info][port].push(ip)
                 end
 		    end
 	    end
@@ -153,10 +148,9 @@ def print_findings()
 
     # Print each finding
     $findings.each do |key, value|
-        print "==> "
+        print "==> OID: "
 	    puts key
-	    puts $descriptions[key]
-
+        
         # If we are printing results with IP addresses
         if $noip == false then
             # Print out all IP addresses for each result
@@ -171,6 +165,30 @@ def print_findings()
                 puts
 	        end
         end
+        
+        $descriptions[key].each do |desc, ports|
+            puts
+            puts "******************Description************************"
+            puts desc
+            puts
+            if $noip == false then
+                puts "------------------IP Addresses-----------------------"
+                puts
+            
+                ports.each do |port, ips|
+                    puts
+                    puts port
+                    puts "-------"
+                    ips.each do |ip|
+                        puts ip
+                    end
+                    puts
+                end
+                puts
+            end
+            puts "*****************************************************"
+        end
+
         # Seperator
         2.times do puts end
         puts "============================================================="
@@ -229,7 +247,7 @@ end
 $findings = Hash.new {|h, k| h[k] = Hash.new { |p, i| p[i] = Array.new } }
 
 # global descriptions db
-$descriptions = Hash.new {|h, k| h[k] = Array.new}
+$descriptions = Hash.new {|h, k| h[k] = Hash.new { |d, i| d[i] = Hash.new { |p, i| p[i] = Array.new  } } }
 
 $holeCount = 0
 $logCount = 0
