@@ -126,7 +126,9 @@ def collect()
                     log_type(type)
     
 	    			info = [type, descriptions]
-		    		$descriptions[number][info][port].push(ip)
+                    if !$descriptions[number][info][port].include?(ip)
+		    		    $descriptions[number][info][port].push(ip)
+                    end
                 end
 		    end
 	    end
